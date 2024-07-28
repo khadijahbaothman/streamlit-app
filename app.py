@@ -7,7 +7,6 @@ import pickle
 # Paths for model and tokenizer
 MODEL_PATH = '65my_model.h5'
 TOKENIZER_PATH = 'tokenizerr.pkl'
-LABEL_ENCODER_PATH = 'label_encoder.pkl'
 
 # Load the model
 model = tf.keras.models.load_model(MODEL_PATH)
@@ -15,10 +14,6 @@ model = tf.keras.models.load_model(MODEL_PATH)
 # Load the tokenizer
 with open(TOKENIZER_PATH, 'rb') as handle:
     tokenizer = pickle.load(handle)
-
-# Load the label encoder
-with open(LABEL_ENCODER_PATH, 'rb') as handle:
-    label_encoder = pickle.load(handle)
 
 # Preprocess descriptions function
 def preprocess_descriptions(descriptions):
@@ -51,16 +46,8 @@ if uploaded_file is not None:
         # Preprocess and make predictions
         predictions = make_predictions(descriptions)
         
-        # Decode predictions
-        predicted_classes = label_encoder.inverse_transform(np.argmax(predictions, axis=1))
-        
-        # Create a DataFrame for the results
-        results = pd.DataFrame({
-            'Description': descriptions,
-            'Predicted Class Label': predicted_classes
-        })
-        
+        # Display predictions
         st.write("Predictions")
-        st.write(results)
+        st.write(predictions)
     except Exception as e:
         st.error(f"Error during model prediction: {str(e)}")
