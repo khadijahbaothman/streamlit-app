@@ -3,7 +3,8 @@ import pandas as pd
 import tensorflow as tf
 
 # Load your trained model (using a relative path)
-MODEL_PATH = 'my_model.h5'
+MODEL_PATH = '65my_model.h5'  
+
 model = tf.keras.models.load_model(MODEL_PATH)
 
 # Preprocess descriptions if necessary
