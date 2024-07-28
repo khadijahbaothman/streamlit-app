@@ -5,9 +5,10 @@ import numpy as np
 import pickle
 from sklearn.preprocessing import LabelEncoder
 
-# Paths for model and tokenizer
-MODEL_PATH = 'my_model.h5'  # Updated model path
+# Paths for model, tokenizer, and label encoder
+MODEL_PATH = 'my_model.h5'
 TOKENIZER_PATH = 'tokenizerr.pkl'
+LABEL_ENCODER_PATH = 'label_encoder.pkl'
 
 # Load the model
 model = tf.keras.models.load_model(MODEL_PATH)
@@ -16,51 +17,9 @@ model = tf.keras.models.load_model(MODEL_PATH)
 with open(TOKENIZER_PATH, 'rb') as handle:
     tokenizer = pickle.load(handle)
 
-# Define the label encoder with the classes provided
-label_encoder = LabelEncoder()
-label_encoder.classes_ = np.array([
-    'Body & Chassis',
-    'Tyre/Wheel',
-    'Electrical (Battery)',
-    'General Inspection',
-    'Engine Electrical',
-    "Operator's Failure",
-    'Mix of Safey & Body/Chassis: paint, reflector',
-    'Baggage Handling (Dolly/BGG CART/ULD)',
-    'Electrical (Low & High Voltage)',
-    'Refurbishment',
-    'Thermal BGT',
-    'Safety (Fire Extinguisher)',
-    'Additional Check prior Seasons',
-    'Brake System',
-    'Load Transfer/Handling',
-    'Safety',
-    'Description to be more precise',
-    'Engine Mechanical',
-    'Air Conditioning',
-    'Engine Fuel System',
-    'Suspension System',
-    'Electrical (Beacon Light)',
-    'Hydraulic System',
-    'Drive Train',
-    'Mix of Baggage Handling & Body Chassis',
-    'Engine Lubrication System',
-    'Electronic System (Sensor)',
-    'Pneumatic System',
-    'Engine Cooling System',
-    'Assembly of new equipment',
-    'Safety Failure',
-    'Electronic System',
-    'Steering System',
-    'Safety (Rubber)',
-    'Engine Exhaust System',
-    'Equipment No Show',
-    'Commisioning of new equipment',
-    'Safety (Reflector)',
-    'Engine Smoking',
-    'Engine Intake System',
-    'Electrical'
-])
+# Load the label encoder
+with open(LABEL_ENCODER_PATH, 'rb') as handle:
+    label_encoder = pickle.load(handle)
 
 # Preprocess descriptions function
 def preprocess_descriptions(descriptions):
