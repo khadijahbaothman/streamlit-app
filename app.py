@@ -6,7 +6,7 @@ import pickle
 from sklearn.preprocessing import LabelEncoder
 
 # Paths for model and tokenizer
-MODEL_PATH = '65my_model.h5'
+MODEL_PATH = 'my_model.h5'  # Updated model path
 TOKENIZER_PATH = 'tokenizerr.pkl'
 
 # Load the model
