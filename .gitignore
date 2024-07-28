@@ -1,0 +1,9 @@
+myenv/
+*.pyc
+__pycache__/
+.DS_Store
+myenv/ 
+*.pyc 
+__pycache__/ 
+.DS_Store 
+65my_model.h5 
