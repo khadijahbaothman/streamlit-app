@@ -50,7 +50,10 @@ if uploaded_file is not None:
     
     try:
         # Preprocess and make predictions
-        predictions = make_predictions(descriptions)
+        st.write("Preprocessing descriptions...")
+        preprocessed_descriptions = preprocess_descriptions(descriptions)
+        st.write("Making predictions...")
+        predictions = model.predict(preprocessed_descriptions)
         
         # Decode predictions
         predicted_class_indices = np.argmax(predictions, axis=1)
@@ -64,3 +67,4 @@ if uploaded_file is not None:
         st.write(data)
     except Exception as e:
         st.error(f"Error during model prediction: {str(e)}")
+        st.error(f"Details: {e.__class__.__name__}: {e}")
