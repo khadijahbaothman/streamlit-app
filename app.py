@@ -35,7 +35,8 @@ def make_predictions_in_batches(descriptions, batch_size=10):
     
     for batch_index in range(num_batches):
         batch_descriptions = descriptions[batch_index * batch_size : (batch_index + 1) * batch_size]
-        st.write(f"Processing batch {batch_index+1}/{num_batches} with {len(batch_descriptions)} descriptions")
+        # Remove the batch processing statements
+        # st.write(f"Processing batch {batch_index+1}/{num_batches} with {len(batch_descriptions)} descriptions")
         
         preprocessed_descriptions = preprocess_descriptions(batch_descriptions)
         
@@ -51,7 +52,7 @@ def make_predictions_in_batches(descriptions, batch_size=10):
     return np.array(all_predictions)
 
 # Streamlit UI
-st.title("Description Classification")
+st.title("Automating Classification of Descriptions Using AI")  # Updated title
 
 uploaded_file = st.file_uploader("Choose a file", type="csv")
 if uploaded_file is not None:
@@ -66,8 +67,8 @@ if uploaded_file is not None:
     
     try:
         # Preprocess and make predictions in batches
-        st.write("Preprocessing descriptions...")
-        st.write("Making predictions in batches...")
+        # st.write("Preprocessing descriptions...")
+        # st.write("Making predictions in batches...")
         predictions = make_predictions_in_batches(descriptions)
         
         if predictions is not None:
