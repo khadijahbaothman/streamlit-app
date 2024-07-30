@@ -36,7 +36,14 @@ def make_predictions_in_batches(descriptions, batch_size=100):
     for batch_index in range(num_batches):
         batch_descriptions = descriptions[batch_index * batch_size : (batch_index + 1) * batch_size]
         preprocessed_descriptions = preprocess_descriptions(batch_descriptions)
-        predictions = model.predict(preprocessed_descriptions)
+        
+        try:
+            predictions = model.predict(preprocessed_descriptions)
+        except Exception as e:
+            st.error(f"Error during batch {batch_index} prediction: {str(e)}")
+            st.error(f"Details: {e.__class__.__name__}: {e}")
+            return None
+        
         all_predictions.extend(predictions)
     
     return np.array(all_predictions)
@@ -61,16 +68,19 @@ if uploaded_file is not None:
         st.write("Making predictions in batches...")
         predictions = make_predictions_in_batches(descriptions)
         
-        # Decode predictions
-        predicted_class_indices = np.argmax(predictions, axis=1)
-        predicted_labels = label_encoder.inverse_transform(predicted_class_indices)
-        
-        # Add prediction columns to the data DataFrame
-        data['Predicted Class Index'] = predicted_class_indices
-        data['Predicted Label'] = predicted_labels
-        
-        st.write("Predictions")
-        st.write(data)
+        if predictions is not None:
+            # Decode predictions
+            predicted_class_indices = np.argmax(predictions, axis=1)
+            predicted_labels = label_encoder.inverse_transform(predicted_class_indices)
+            
+            # Add prediction columns to the data DataFrame
+            data['Predicted Class Index'] = predicted_class_indices
+            data['Predicted Label'] = predicted_labels
+            
+            st.write("Predictions")
+            st.write(data)
+        else:
+            st.error("Error occurred during batch prediction. Please check the logs.")
     except Exception as e:
         st.error(f"Error during model prediction: {str(e)}")
         st.error(f"Details: {e.__class__.__name__}: {e}")
