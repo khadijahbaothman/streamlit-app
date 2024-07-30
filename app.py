@@ -29,12 +29,14 @@ def preprocess_descriptions(descriptions):
     return padded_sequences
 
 # Function to make predictions in batches
-def make_predictions_in_batches(descriptions, batch_size=100):
+def make_predictions_in_batches(descriptions, batch_size=10):
     all_predictions = []
     num_batches = len(descriptions) // batch_size + (1 if len(descriptions) % batch_size != 0 else 0)
     
     for batch_index in range(num_batches):
         batch_descriptions = descriptions[batch_index * batch_size : (batch_index + 1) * batch_size]
+        st.write(f"Processing batch {batch_index+1}/{num_batches} with {len(batch_descriptions)} descriptions")
+        
         preprocessed_descriptions = preprocess_descriptions(batch_descriptions)
         
         try:
