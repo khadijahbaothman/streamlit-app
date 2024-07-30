@@ -28,11 +28,18 @@ def preprocess_descriptions(descriptions):
     padded_sequences = tf.keras.preprocessing.sequence.pad_sequences(sequences, maxlen=200)
     return padded_sequences
 
-# Function to make predictions
-def make_predictions(descriptions):
-    preprocessed_descriptions = preprocess_descriptions(descriptions)
-    predictions = model.predict(preprocessed_descriptions)
-    return predictions
+# Function to make predictions in batches
+def make_predictions_in_batches(descriptions, batch_size=100):
+    all_predictions = []
+    num_batches = len(descriptions) // batch_size + (1 if len(descriptions) % batch_size != 0 else 0)
+    
+    for batch_index in range(num_batches):
+        batch_descriptions = descriptions[batch_index * batch_size : (batch_index + 1) * batch_size]
+        preprocessed_descriptions = preprocess_descriptions(batch_descriptions)
+        predictions = model.predict(preprocessed_descriptions)
+        all_predictions.extend(predictions)
+    
+    return np.array(all_predictions)
 
 # Streamlit UI
 st.title("Description Classification")
@@ -49,11 +56,10 @@ if uploaded_file is not None:
     st.write(descriptions)
     
     try:
-        # Preprocess and make predictions
+        # Preprocess and make predictions in batches
         st.write("Preprocessing descriptions...")
-        preprocessed_descriptions = preprocess_descriptions(descriptions)
-        st.write("Making predictions...")
-        predictions = model.predict(preprocessed_descriptions)
+        st.write("Making predictions in batches...")
+        predictions = make_predictions_in_batches(descriptions)
         
         # Decode predictions
         predicted_class_indices = np.argmax(predictions, axis=1)
