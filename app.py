@@ -61,7 +61,11 @@ st.title("Automating Classification of Descriptions Using AI")  # Updated title
 uploaded_file = st.file_uploader("Choose a file", type="csv")
 if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
-    st.write("Uploaded Data")
+    
+    # Remove columns that start with 'Unnamed'
+    data = data.loc[:, ~data.columns.str.startswith('Unnamed')]
+    
+    st.write("Uploaded Data (without Unnamed columns)")
     st.write(data)
     
     # Extract descriptions
