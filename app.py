@@ -21,10 +21,17 @@ with open(TOKENIZER_PATH, 'rb') as handle:
 with open(LABEL_ENCODER_PATH, 'rb') as handle:
     label_encoder = pickle.load(handle)
 
-# Preprocess descriptions function
+# Preprocess descriptions function with error handling for non-string values
 def preprocess_descriptions(descriptions):
-    descriptions = [desc.lower() for desc in descriptions]
-    sequences = tokenizer.texts_to_sequences(descriptions)
+    cleaned_descriptions = []
+    for desc in descriptions:
+        if isinstance(desc, str):
+            cleaned_descriptions.append(desc.lower())
+        else:
+            # Handle non-string descriptions (e.g., NaN, float, etc.)
+            cleaned_descriptions.append("")
+    
+    sequences = tokenizer.texts_to_sequences(cleaned_descriptions)
     padded_sequences = tf.keras.preprocessing.sequence.pad_sequences(sequences, maxlen=200)
     return padded_sequences
 
@@ -35,9 +42,6 @@ def make_predictions_in_batches(descriptions, batch_size=10):
     
     for batch_index in range(num_batches):
         batch_descriptions = descriptions[batch_index * batch_size : (batch_index + 1) * batch_size]
-        # Remove the batch processing statements
-        # st.write(f"Processing batch {batch_index+1}/{num_batches} with {len(batch_descriptions)} descriptions")
-        
         preprocessed_descriptions = preprocess_descriptions(batch_descriptions)
         
         try:
@@ -67,8 +71,6 @@ if uploaded_file is not None:
     
     try:
         # Preprocess and make predictions in batches
-        # st.write("Preprocessing descriptions...")
-        # st.write("Making predictions in batches...")
         predictions = make_predictions_in_batches(descriptions)
         
         if predictions is not None:
